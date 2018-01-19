@@ -4,7 +4,7 @@ const httpApi = require('../api/httpApi');
 
 router.get('/', (req, res) => {
 
-    res.sendFile('./static/index.html');
+    res.send('Hello World!');
 });
 
 module.exports = router;
