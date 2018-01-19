@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <hr>
+    <div>
+        <label for="">微博URL</label>
+        <input style="width:86%;" id="url" type="text" value="http://weibo.com/1644395354/D4VhKDY6K">
+        <iframe style="width: 100%;height:300px;" id="iframe" src="" frameborder="0"></iframe>
+    </div>
+    <div>
+        <button id="getdata">获取数据</button>
+    </div>
+    <hr>
+    <div>
+        <textarea style="width:100%;" name="" id="response" cols="30" rows="10"></textarea>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+            $("#getdata").click(function () {
+                var url = $("#url").val();
+                $("#iframe").attr("src", url);
+                $.ajax({
+                    url: "http://59.110.235.29:3000/weibo",
+                    type: "POST",
+                    dataType: "JSON",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        url: url,
+                        method: "GET",
+                    })
+                }).fail(function (response) {
+
+                    var weiBodata = {};
+
+                    var el = $('<div></div>');
+                    el.html(response.responseText);
+                    var scripts = $('script', el);
+                    for (var key in scripts) {
+
+                        if (scripts.hasOwnProperty(key)) {
+                            var element = scripts[key];
+                            if (/var config/.test(element.innerText)) {
+                                var jsonstring = element.innerText;
+                                // console.log(jsonstring);
+                                jsonstring = /\[{[\d\D]*}\]/.exec(jsonstring);
+                                // console.log(JSON.stringify(jsonstring));
+                                var json = JSON.parse(jsonstring);
+
+                                var weiboContent = json[0];
+                                console.log(JSON.stringify(weiboContent));
+                                //创建时间
+                                weiBodata.created = weiboContent.status.created_at;
+                                //博主id
+                                weiBodata.userId = weiboContent.status.user.id;
+                                //博主名称
+                                weiBodata.userName = weiboContent.status.user.screen_name;
+                                //博主粉丝
+                                weiBodata.userFollowers = weiboContent.status.user.followers_count;
+                                //转发
+                                weiBodata.reposts = weiboContent.status.reposts_count;
+                                //评论
+                                weiBodata.comments = weiboContent.status.comments_count;
+                                //赞
+                                weiBodata.attitudes = weiboContent.status.attitudes_count;
+                                //微博标题
+                                weiBodata.title = weiboContent.status.status_title;
+                                //发布的内容
+                                weiBodata.Text = weiboContent.status.text;
+
+                                //是否转发
+                                if (weiboContent.status.retweeted_status != null) {
+                                    weiBodata.isRelay = true;
+                                } else {
+                                    weiBodata.isRelay = false;
+                                }
+                                // retweeted_status
+
+                                // console.log(weiboText);
+                            }
+                        }
+                    }
+                    $("#response").val(JSON.stringify(weiBodata));
+
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
