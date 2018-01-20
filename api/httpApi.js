@@ -1,60 +1,65 @@
-const https = require('https')
 const qs = require('querystring')
 
-Api = (host, path, method, contentType, data, okCallback, errorCallback) => {
-
+const Api = (protocal, host, port, path, method, contentType, data, okCallback, errorCallback) => {
     //输出日志信息
-    console.log('URL => ' + host + path)
+    console.log('URL => ' + protocal + "://" + host + ":" + port + path)
 
-    var ContentType = 'application/x-www-form-urlencoded'
-    if (contentType != null)
-        ContentType = contentType
-    if (data != null) {
-        console.log('request data => ' + JSON.stringify(data))
+    //contentType
+    if (contentType == null)
+        contentType = 'application/x-www-form-urlencoded'
 
-    }
-
+    //
     let options = {
         hostname: host,
         method: method,
         path: path,
-        port: null,
+        port: port,
         headers: {
-            'Content-Type': ContentType
+            'Content-Type': contentType,
         }
     }
+    console.log(options);
 
-    const client = https.request(options, (res) => {
+    //http协议
+    let httpProtocal = require('http');
+    if (httpProtocal != null && protocal == 'https') {
+        httpProtocal = require('https');
+    }
 
-        console.log('error');
-        //错误
-        res.on('error', (error) => {
-            console.log('Error => ' + error)
-            errorCallback(error);
-        })
+    const client = httpProtocal.request(options, (res) => {
 
-        console.log('data');
         //数据块
         let chunks = []
         res.on('data', (chunk) => {
             chunks.push(chunk)
         })
 
-        console.log('end');
         //数据处理完成
         res.on('end', () => {
             //拼接数据块
             let body = Buffer.concat(chunks)
             let response = body.toString()
-            console.log('response end data => ' + response)
+            console.log('<================= response end data ===================> ');
+            console.log(response);
             res.setEncoding('utf8')
-            okCallback(response, res.statusCode)
+            //执行成功的回调函数
+            okCallback(response, res.statusCode, res.headers['set-cookie'])
         })
-    })
+
+        //错误
+        res.on('error', (error) => {
+            console.log('<================ Error ====================> ');
+            console.log(error);
+            errorCallback(error);
+        })
+
+    });
 
     //POST方式时写入请求数据
     if (data != null) {
-        client.write(qs.stringify(data));
+        console.log("<====================== POST方式时写入请求数据 ========================>");
+        console.log(data);
+        client.write(data);
     }
 
     client.end();
