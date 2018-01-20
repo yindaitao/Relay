@@ -1,6 +1,6 @@
 const qs = require('querystring')
 
-const Api = (protocal, host, port, path, method, contentType, data, okCallback, errorCallback) => {
+const Api = (protocal, host, port, path, method, contentType, authorization, data, okCallback, errorCallback) => {
     //输出日志信息
     console.log('URL => ' + protocal + "://" + host + ":" + port + path)
 
@@ -8,12 +8,14 @@ const Api = (protocal, host, port, path, method, contentType, data, okCallback, 
     if (contentType == null)
         contentType = 'application/x-www-form-urlencoded'
 
+
     //
     let options = {
         hostname: host,
         method: method,
         path: path,
         port: port,
+        Authorization: authorization,
         headers: {
             'Content-Type': contentType,
         }
@@ -43,7 +45,7 @@ const Api = (protocal, host, port, path, method, contentType, data, okCallback, 
             console.log(response);
             res.setEncoding('utf8')
             //执行成功的回调函数
-            okCallback(response, res.statusCode, res.headers['set-cookie'])
+            okCallback(response, res.statusCode, res.headers)
         })
 
         //错误

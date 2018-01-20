@@ -11,12 +11,19 @@ router.post('/', (req, res) => {
     var method = req.body.method;
     var contentType = req.body.contentType;
     var data = req.body.data;
+    var authorization = req.body.Authorization;
 
-    var result = httpApi(protocal, host, port, path, method, contentType, data,
-        (response, code, cookie) => {
+    var result = httpApi(protocal, host, port, path, method, contentType, authorization, data,
+        (response, code, headers) => {
+            console.log('<======================== headers ===========================>')
+            console.log(headers);
             //设置cookie值
-            if (cookie != null)
-                res.setHeader('set-Cookie', cookie);
+            if (headers['set-cookie'] != null) {
+                res.setHeader('set-Cookie', headers['set-cookie']);
+                res.setHeader('expires', headers.expires);
+                res.setHeader('date', headers.date);
+                res.setHeader('content-type', headers['content-type']);
+            }
             res.status(code).send(response);
         },
         (error) => {
