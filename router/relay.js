@@ -15,15 +15,15 @@ router.post('/', (req, res) => {
 
     var result = httpApi(protocal, host, port, path, method, contentType, authorization, data,
         (response, code, headers) => {
-            console.log('<======================== headers ===========================>')
-            console.log(headers);
-            //设置cookie值
-            if (headers['set-cookie'] != null) {
-                res.setHeader('set-Cookie', headers['set-cookie']);
-                res.setHeader('expires', headers.expires);
-                res.setHeader('date', headers.date);
-                res.setHeader('content-type', headers['content-type']);
-            }
+            // console.log('<======================== headers ===========================>')
+            // console.log(headers);
+            // //设置cookie值
+            // if (path != "/weibo" && headers['set-cookie'] != null) {
+            //     res.setHeader('set-Cookie', headers['set-cookie']);
+            //     res.setHeader('expires', headers.expires);
+            //     res.setHeader('date', headers.date);
+            //     res.setHeader('content-type', headers['content-type']);
+            // }
             res.status(code).send(response);
         },
         (error) => {
