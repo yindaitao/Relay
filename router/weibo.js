@@ -12,7 +12,7 @@ router.post('/', (req, res) => {
 
     req.body.protocal = "https";
     req.body.host = 'm.weibo.cn';
-    req.body.path = '/status/' + id;
+    req.body.path = '/statuses/show?id=' + id;
     req.body.port = null;
     req.body.method = "GET";
 
