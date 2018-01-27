@@ -15,6 +15,7 @@ router.post('/', (req, res) => {
     req.body.path = '/statuses/show?id=' + id;
     req.body.port = null;
     req.body.method = "GET";
+    req.body.cookie = null;
 
     //调用转发协议
     relay(req, res);

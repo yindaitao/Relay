@@ -1,6 +1,6 @@
 const qs = require('querystring')
 
-const Api = (protocal, host, port, path, method, contentType, authorization, data, okCallback, errorCallback) => {
+const Api = (protocal, host, port, path, method, contentType, cookie, data, okCallback, errorCallback) => {
     //输出日志信息
     console.log('URL => ' + protocal + "://" + host + ":" + port + path)
 
@@ -9,15 +9,15 @@ const Api = (protocal, host, port, path, method, contentType, authorization, dat
         contentType = 'application/x-www-form-urlencoded'
 
 
-    //
+    //请求参数
     let options = {
         hostname: host,
         method: method,
         path: path,
         port: port,
-        Authorization: authorization,
         headers: {
             'Content-Type': contentType,
+            'Cookie': cookie,
         }
     }
     console.log(options);
@@ -63,7 +63,7 @@ const Api = (protocal, host, port, path, method, contentType, authorization, dat
         console.log(data);
         client.write(data);
     }
-
+    
     client.end();
 }
 
