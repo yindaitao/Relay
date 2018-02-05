@@ -3,12 +3,11 @@ const router = express()
 const relay = require('./relay');
 
 router.post('/', (req, res) => {
-    console.log('<===== weibo =====>');
+    console.log('<===== weibo content =====>');
 
     //重新封装URL
-    var url = req.body.url;
-    var id = null;
-    if (url != null) id = url.substring(url.lastIndexOf("/") + 1);
+    let url = req.body.url;
+    let id = url.substring(url.lastIndexOf("/") + 1);
 
     req.body.protocal = "https";
     req.body.host = 'm.weibo.cn';

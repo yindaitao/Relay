@@ -38,6 +38,7 @@ const Api = (protocal, host, port, path, method, contentType, cookie, data, okCa
 
         //数据处理完成
         res.on('end', () => {
+
             //拼接数据块
             let body = Buffer.concat(chunks)
             let response = body.toString()
