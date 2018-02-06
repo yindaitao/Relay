@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
         req.body.method = "GET";
         req.body.cookie = null;
 
-        relay(req, res, null);
+        relay(req, res);
 
     });
 });
