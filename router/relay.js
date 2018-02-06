@@ -43,8 +43,10 @@ let postRequest = router.post('/', (req, res) => {
             
             //判断是否存在回调函数
             if (okCallBack === undefined || okCallBack === null) {
+                console.log("<3333333333333333333333333333333333333333333>");
                 res.status(code).send(response);
             } else {
+                console.log("<44444444444444444444444444444444444444444444444444>");
                 okCallBack(response);
             }
         },

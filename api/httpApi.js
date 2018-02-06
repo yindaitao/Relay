@@ -20,6 +20,7 @@ const Api = (protocal, host, port, path, method, contentType, cookie, data, okCa
             'Cookie': cookie,
         }
     }
+    console.log("<===================== express request options ========================>");
     console.log(options);
 
     //http协议
